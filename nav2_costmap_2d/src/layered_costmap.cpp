@@ -287,4 +287,20 @@ void LayeredCostmap::setFootprint(const std::vector<geometry_msgs::msg::Point> &
   }
 }
 
+void LayeredCostmap::updateDynamicObstaclesContainer(const nav2_dynamic_msgs::msg::ObstacleArray::SharedPtr obstacle_msg)
+{
+  std::unique_lock<Costmap2D::mutex_t> lock(*(combined_costmap_.getMutex()));
+
+  dynamic_obstacles_ = obstacle_msg;
+}
+
+
+nav2_dynamic_msgs::msg::ObstacleArray::ConstSharedPtr LayeredCostmap::getDynamicObstacles()
+{
+  std::unique_lock<Costmap2D::mutex_t> lock(*(combined_costmap_.getMutex()));
+
+  return dynamic_obstacles_;
+}
+
+
 }  // namespace nav2_costmap_2d

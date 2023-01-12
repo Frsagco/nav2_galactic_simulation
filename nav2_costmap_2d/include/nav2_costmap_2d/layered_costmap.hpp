@@ -210,6 +210,12 @@ public:
   * of poorly configured setups. */
   bool isOutofBounds(double robot_x, double robot_y);
 
+  /** @brief Update the stored container of dynamic obstacles.*/
+  void updateDynamicObstaclesContainer(const nav2_dynamic_msgs::msg::ObstacleArray::SharedPtr obstacle_msg);
+
+  /** @brief Return the dynamic obstacles detected by the kf_hungarian_tracker (passed on topic).*/
+  nav2_dynamic_msgs::msg::ObstacleArray::ConstSharedPtr getDynamicObstacles();
+
 private:
   // primary_costmap_ is a bottom costmap used by plugins when costmap filters were enabled.
   // combined_costmap_ is a final costmap where all results produced by plugins and filters (if any)
@@ -232,6 +238,9 @@ private:
   bool size_locked_;
   double circumscribed_radius_, inscribed_radius_;
   std::vector<geometry_msgs::msg::Point> footprint_;
+
+  // dynamic obstacles 
+  nav2_dynamic_msgs::msg::ObstacleArray::ConstSharedPtr dynamic_obstacles_;
 };
 
 }  // namespace nav2_costmap_2d

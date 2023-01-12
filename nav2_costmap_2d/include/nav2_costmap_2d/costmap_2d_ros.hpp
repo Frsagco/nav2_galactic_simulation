@@ -302,6 +302,12 @@ public:
    */
   double getRobotRadius() {return robot_radius_;}
 
+  /**
+   * @brief  Get new obstacle array message, it is simply uploaded dynamics obstacles information.
+   */
+  void tracksCallback(const nav2_dynamic_msgs::msg::ObstacleArray::SharedPtr obstacle_msg);
+
+
 protected:
   rclcpp::Node::SharedPtr client_node_;
 
@@ -312,6 +318,8 @@ protected:
 
   rclcpp::Subscription<geometry_msgs::msg::Polygon>::SharedPtr footprint_sub_;
   rclcpp::Subscription<rcl_interfaces::msg::ParameterEvent>::SharedPtr parameter_sub_;
+  rclcpp::Subscription<nav2_dynamic_msgs::msg::ObstacleArray>::SharedPtr tracks_sub_;
+
 
   // Transform listener
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;

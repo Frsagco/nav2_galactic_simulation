@@ -114,6 +114,7 @@ Costmap2DROS::Costmap2DROS(
   declare_parameter("update_frequency", rclcpp::ParameterValue(5.0));
   declare_parameter("use_maximum", rclcpp::ParameterValue(false));
   declare_parameter("clearable_layers", rclcpp::ParameterValue(clearable_layers));
+  declare_parameter("dynamic_obstacles_plugin", rclcpp::ParameterValue(true));
 }
 
 Costmap2DROS::~Costmap2DROS()
@@ -197,6 +198,15 @@ Costmap2DROS::on_configure(const rclcpp_lifecycle::State & /*state*/)
 
   // Add cleaning service
   clear_costmap_service_ = std::make_unique<ClearCostmapService>(shared_from_this(), *this);
+
+  if (dynamic_obstacles_plugin_) {
+    tracks_sub_ = create_subscription<nav2_dynamic_msgs::msg::ObstacleArray>(
+      "tracking", 
+      10, 
+      std::bind(&Costmap2DROS::tracksCallback, this, std::placeholders::_1));
+
+    RCLCPP_INFO(get_logger(), "Created subscription to dynamic obstacles topic");
+  }
 
   return nav2_util::CallbackReturn::SUCCESS;
 }
@@ -315,6 +325,8 @@ Costmap2DROS::getParameters()
   get_parameter("width", map_width_meters_);
   get_parameter("plugins", plugin_names_);
   get_parameter("filters", filter_names_);
+  get_parameter("dynamic_obstacles_plugin", dynamic_obstacles_plugin_);
+
 
   auto node = shared_from_this();
 
@@ -586,5 +598,10 @@ Costmap2DROS::transformPoseToGlobalFrame(
       global_frame_, transform_tolerance_);
   }
 }
+
+void Costmap2DROS::tracksCallback(const nav2_dynamic_msgs::msg::ObstacleArray::SharedPtr obstacle_msg)
+{
+  layered_costmap_->updateDynamicObstaclesContainer(obstacle_msg);
+} 
 
 }  // namespace nav2_costmap_2d
