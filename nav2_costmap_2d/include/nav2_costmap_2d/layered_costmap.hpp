@@ -45,6 +45,7 @@
 #include "nav2_costmap_2d/cost_values.hpp"
 #include "nav2_costmap_2d/layer.hpp"
 #include "nav2_costmap_2d/costmap_2d.hpp"
+#include "nav2_dynamic_msgs/msg/obstacle_array.hpp"
 
 namespace nav2_costmap_2d
 {
