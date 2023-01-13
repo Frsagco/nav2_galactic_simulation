@@ -368,6 +368,7 @@ protected:
   bool rolling_window_{false};     ///< Whether to use a rolling window version of the costmap
   bool track_unknown_space_{false};
   double transform_tolerance_{0};  ///< The timeout before transform errors
+  bool dynamic_obstacles_plugin_; // check if dynamic obstacles is enabled or not 
 
   // Derived parameters
   bool use_radius_{false};
